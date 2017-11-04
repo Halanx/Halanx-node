@@ -9,7 +9,7 @@
 <div id="news-list"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
 <script>
-    var socket = io('http://localhost:3700',{ path: '/node/sockets/test/', transports: ['websocket']});
+    var socket = io(location.origin,{ path: '/node/', transports: ['websocket']});
 
     socket.on('news', function (data) {
         var div = document.getElementById("news-list");
