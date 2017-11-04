@@ -11,7 +11,7 @@
     "ejs": "~2.5.6",
     "express": "~4.15.2",
     "redis": "^2.7.1",
-    "socket.io": "^1.7.3"
+    "socket.io": "latest"
   },
   "author": "Shubham Aggarwal(@shuboy2014)",
   "license": "ISC"
