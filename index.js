@@ -1,10 +1,11 @@
 var app = require('express')();
 var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var io = require('socket.io')(http, {path: '/node/'}).listen(http);
 var port = process.env.PORT || 3700;
 
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/index1.html');
+app.get('/node/', function (req, res) {
+    console.log(req.headers);
+    res.sendFile(__dirname + '/index.html');
 });
 
 

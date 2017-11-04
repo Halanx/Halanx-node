@@ -2,12 +2,11 @@
   "name": "Halanx-node",
   "version": "0.0.0",
   "private": true,
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node index.js"
   },
   "dependencies": {
-    "debug": "~2.6.3",
     "ejs": "~2.5.6",
     "express": "~4.15.2",
     "redis": "^2.7.1",
