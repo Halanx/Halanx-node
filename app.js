@@ -4,11 +4,11 @@ var app = express();
 
 var server = http.createServer(app);
 
-var io = require('socket.io')(server, { path: '/sockets/test/' }).listen(server);
+var io = require('socket.io')(server, { path: '/node/sockets/test/' }).listen(server);
 
 server.listen(3700);
 
-app.get('/', function (req, res) {
+app.get('/node/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
