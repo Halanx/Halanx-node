@@ -11,7 +11,7 @@
 <script>
     var socket = io(location.origin,{ path: '/node/', transports: ['websocket']});
 
-    socket.on('news', function (data) {
+    socket.on('message', function (data) {
         var div = document.getElementById("news-list");
         console.log("Rendering news : ",data);
 

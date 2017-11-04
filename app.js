@@ -1,12 +1,9 @@
-var http = require('http');
 var express = require('express');
 var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http, {path: '/node/'}).listen(http);
 
-var server = http.createServer(app);
-
-var io = require('socket.io')(server, {path: '/node/'}).listen(server);
-
-server.listen(3700);
+http.listen(3700);
 
 app.get('/node/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
@@ -19,7 +16,7 @@ io.on('connection', function (socket) {
         {title: 'The cure of the Sadness is to play Videogames', date: '04.10.2016'}
     ];
 
-    socket.emit('news', news);
+    socket.emit('message', news);
 
     socket.on('message', function (data) {
         console.log(data);
