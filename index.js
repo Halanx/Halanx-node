@@ -1,6 +1,6 @@
 var app = require('express')();
 var http = require('http').Server(app);
-var io = require('socket.io').listen(http);
+var io = require('socket.io')(http,{path: '/notification'}).listen(http);
 var port = process.env.PORT || 3700;
 
 app.get('/', function (req, res) {
@@ -14,7 +14,7 @@ http.listen(port, function () {
 
 
 io.on('connection', function (socket) {
-    console.log('connected');
+    console.log("asgadsg");
     socket.on('onmessage', function (msg) {
         io.emit('onmessage', msg);
     });
