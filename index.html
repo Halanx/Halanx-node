@@ -64,7 +64,7 @@
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script>
     $(function () {
-        var socket = io(location.origin, { path: '/notification', transports: ['websocket']});
+        var socket = io(location.origin, {transports: ['websocket']});
         $('form').submit(function () {
             socket.emit('onmessage', $('#m').val());
             $('#m').val('');
