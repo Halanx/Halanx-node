@@ -29,16 +29,23 @@ http.listen(port, function () {
 
 io.on('connection', function (socket) {
 
-    socket.on('join', function (msg) {
-        socket.join(msg.room);
-    });
+    console.log(socket.id, "Connected");
 
     redis.on("pmessage", function (pattern, channel, msg) {
-        console.log(pattern, channel, msg);
-        socket.to(msg.room).emit(channel, msg);
+        msg = JSON.parse(msg);
+        console.log(pattern, channel, msg, msg.room, msg.text);
+        socket.emit('onMessage', msg);
+    });
+
+    socket.on('join', function (msg) {
+        socket.join(msg.room);
     });
 
     socket.on('onMessage', function (msg) {
         socket.to(msg.room).emit('onMessage', {"text": msg.text});
     });
+
+    socket.on('disconnect', function () {
+        console.log(socket.id, "Disconnected");
+    })
 });
