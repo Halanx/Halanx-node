@@ -3,14 +3,16 @@ var http = require('http').Server(app);
 var io = require('socket.io').listen(http);
 var port = process.env.PORT || 3700;
 var bodyParser = require('body-parser');
+var redis = require('redis').createClient();
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
+redis.psubscribe("onMessage");
+
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
-
 
 app.get('/room/:rname/', function (req, res) {
     if (req.params.rname) {
@@ -31,8 +33,12 @@ io.on('connection', function (socket) {
         socket.join(msg.room);
     });
 
+    redis.on("pmessage", function (pattern, channel, msg) {
+        console.log(pattern, channel, msg);
+        socket.to(msg.room).emit(channel, msg);
+    });
+
     socket.on('onMessage', function (msg) {
-        console.log("Message Received from ", socket.id , " ",  msg);
-        socket.to(msg.room).emit('onMessage',{"text": msg.text});
+        socket.to(msg.room).emit('onMessage', {"text": msg.text});
     });
 });
