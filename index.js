@@ -1,7 +1,7 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io').listen(http);
-var port = process.env.PORT || 3700;
+var port = 9999;
 var bodyParser = require('body-parser');
 var redis = require('redis').createClient();
 
@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 redis.psubscribe("onMessage");
-
+redis.psubscribe("onChat");
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
@@ -44,6 +44,8 @@ io.on('connection', function (socket) {
     socket.on('onMessage', function (msg) {
         socket.to(msg.room).emit('onMessage', {"text": msg.text});
     });
+
+    
 
     socket.on('disconnect', function () {
         console.log(socket.id, "Disconnected");
