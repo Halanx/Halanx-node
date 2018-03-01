@@ -9,7 +9,7 @@ var cache = require('redis').createClient();
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-redis.psubscribe("onMessage");
+redis.psubscribe("onMessage");ex
 redis.psubscribe("onChat");
 
 app.get('/', function (req, res) {
@@ -37,19 +37,15 @@ io.on('connection', function (socket) {
         cache.get(id, function (err, data) {
             if (err) throw err;
     
+            cache.set(id,socket.id);
+            cache.set(socket.id,id);
+
             if (data != null) {
-                socket.disconnect();
+                console.log("New Customer Id : ", id," New Socket-Id : " , socket.id);
             } else {
-                cache.set(id,socket.id);
-                cache.set(socket.id,id);
                 console.log("Customer Id : ", id," Socket-Id : " , socket.id);
             }
         });
-    });
-
-    redis.on("pmessage", function (pattern, channel, msg) {
-        msg = JSON.parse(msg);
-        socket.emit('onMessage', msg);
     });
 
     socket.on('join', function (msg) {
@@ -61,28 +57,43 @@ io.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function () {
-        cache.get(socket.id, function (err, data) {
+        cache.get(socket.id, function (err, customer_id) {
             if (err) throw err;
     
-            if (data != null) {
+            if (customer_id != null) {
                 // Delete customer id : socket.id
-                cache.del(data,function(err,response){
+                cache.del(customer_id,function(err,response){
                     if (response == 1) {
-                        console.log("Customer-Id:Socket-Id  Deleted Successfully!")
+                        console.log( customer_id +":" + socket.id  +  " Deleted Successfully!")
                     } else{
-                        console.log("Cannot delete")
+                        console.log("Cannot delete Customer to Socket")
                     }
                 });
                 // Delete socket.id : customer id
                 cache.del(socket.id,function(err,response){
                     if (response == 1) {
-                        console.log("Socket-Id:Customer-Id Deleted Successfully!")
+                        console.log( socket.id + ":" + customer_id  + " Deleted Successfully!")
                     } else{
-                        console.log("Cannot delete")
+                        console.log("Cannot delete Socket id to Customer")
                     }
                 });
             }
         });
         console.log(socket.id, "Disconnected");
     })
+});
+
+redis.on("pmessage", function (pattern, channel, msg) {
+    msg = JSON.parse(msg);
+    if(channel == 'onChat'){
+        cache.get(msg.receiver,function(err,id){
+            if (err) throw err;
+            
+            if(id != null){
+                socket.to(id).emit("onChat",msg);
+            }
+        });
+    }else{
+        socket.emit('onMessage', msg);
+    }
 });
