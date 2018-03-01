@@ -17,6 +17,7 @@
   "author": "Shubham Aggarwal(@shuboy2014)",
   "license": "ISC",
   "devDependencies": {
-    "events": "^1.1.1"
+    "events": "^1.1.1",
+    "nodemon": "^1.17.1"
   }
 }
