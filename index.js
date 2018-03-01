@@ -5,16 +5,25 @@ var port = 3700;
 var bodyParser = require('body-parser');
 var redis = require('redis').createClient();
 var cache = require('redis').createClient();
+var request = require('request');
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-
-redis.psubscribe("onMessage");ex
+app.set('view engine','ejs');
+redis.psubscribe("onMessage");
 redis.psubscribe("onChat");
 
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
+
+app.get("/polls",(req,res,next)=>{
+    request({url:"https://api.halanx.com/users/fbsharer/"+req.query.id +'/'},function(error, response, body) { 
+              body = JSON.parse(body);
+              res.render('polls',{"name":"Here is what people like about "+body.name+"!","img":body.img,});
+             }); 
+
+ });
 
 app.get('/room/:rname/', function (req, res) {
     if (req.params.rname) {
