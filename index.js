@@ -22,7 +22,7 @@ app.get("/polls",(req,res,next)=>{
     request({url:"https://api.halanx.com/users/fbsharer/"+req.query.id +'/'},
     function(error, response, body) { 
         body = JSON.parse(body);
-        res.render('polls',{"name":"Here is what people like about "+body.name+"!","img":body.img,});
+        res.render('polls',{"name":body.name,"img":body.img,});
     }); 
 });
 
