@@ -1,15 +1,16 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io').listen(http);
-var port = 3700;
-var bodyParser = require('body-parser');
-var redis = require('redis').createClient();
-var cache = require('redis').createClient();
-var request = require('request');
+const app = require('express')();
+const http = require('http').Server(app);
+const io = require('socket.io').listen(http);
+const port = 3700;
+const bodyParser = require('body-parser');
+const redis = require('redis').createClient();
+const cache = require('redis').createClient();
+const online = require('redis').createClient();
+const request = require('request');
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-app.set('view engine','ejs');
+app.set('view engine', 'ejs');
 
 redis.psubscribe("onMessage");
 redis.psubscribe("onChat");
@@ -18,12 +19,11 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
-app.get("/polls",(req,res,next)=>{
-    request({url:"https://api.halanx.com/users/fbsharer/"+req.query.id +'/'},
-    function(error, response, body) { 
+app.get("/polls", (req, res, next) => {
+    request({url: "https://api.halanx.com/users/fbsharer/" + req.query.id + '/'}, function (error, response, body) {
         body = JSON.parse(body);
-        res.render('polls',{"name":"Here is what people like about "+body.name+"!","img":body.img,});
-    }); 
+        res.render('polls', {"name": "Here is what people like about " + body.name + "!", "img": body.img});
+    });
 });
 
 app.get('/room/:rname/', function (req, res) {
@@ -34,6 +34,24 @@ app.get('/room/:rname/', function (req, res) {
     }
 });
 
+
+app.get('/online/:id', function (req, res) {
+    const customer_id = req.params.id;
+    online.get(customer_id, function (err, id) {
+        if (err) throw err;
+
+        if (id) {
+            res.json({
+                online: true
+            })
+        } else {
+            res.json({
+                online: false
+            })
+        }
+    });
+});
+
 http.listen(port, function () {
     console.log('listening on *:' + port);
 });
@@ -42,18 +60,18 @@ io.on('connection', function (socket) {
 
     console.log(socket.id, "Connected");
 
-    socket.on('setCache',function(msg){
+    socket.on('setCache', function (msg) {
         var id = msg.id;
         cache.get(id, function (err, data) {
             if (err) throw err;
-    
-            cache.set(id,socket.id);
-            cache.set(socket.id,id);
+
+            cache.set(id, socket.id);
+            cache.set(socket.id, id);
 
             if (data != null) {
-                console.log("New Customer Id : ", id," New Socket-Id : " , socket.id);
+                console.log("New Customer Id : ", id, " New Socket-Id : ", socket.id);
             } else {
-                console.log("Customer Id : ", id," Socket-Id : " , socket.id);
+                console.log("Customer Id : ", id, " Socket-Id : ", socket.id);
             }
         });
     });
@@ -69,21 +87,21 @@ io.on('connection', function (socket) {
     socket.on('disconnect', function () {
         cache.get(socket.id, function (err, customer_id) {
             if (err) throw err;
-    
+
             if (customer_id != null) {
                 // Delete customer id : socket.id
-                cache.del(customer_id,function(err,response){
+                cache.del(customer_id, function (err, response) {
                     if (response == 1) {
-                        console.log( customer_id +":" + socket.id  +  " Deleted Successfully!")
-                    } else{
+                        console.log(customer_id + ":" + socket.id + " Deleted Successfully!")
+                    } else {
                         console.log("Cannot delete Customer to Socket")
                     }
                 });
                 // Delete socket.id : customer id
-                cache.del(socket.id,function(err,response){
+                cache.del(socket.id, function (err, response) {
                     if (response == 1) {
-                        console.log( socket.id + ":" + customer_id  + " Deleted Successfully!")
-                    } else{
+                        console.log(socket.id + ":" + customer_id + " Deleted Successfully!")
+                    } else {
                         console.log("Cannot delete Socket id to Customer")
                     }
                 });
@@ -95,15 +113,15 @@ io.on('connection', function (socket) {
 
 redis.on("pmessage", function (pattern, channel, msg) {
     msg = JSON.parse(msg);
-    if(channel == 'onChat'){
-        cache.get(msg.receiver,function(err,id){
+    if (channel === 'onChat') {
+        cache.get(msg.receiver, function (err, id) {
             if (err) throw err;
-            
-            if(id != null){
-                socket.to(id).emit("onChat",msg);
+
+            if (id != null) {
+                io.sockets.to(id).emit("onChat", msg);
             }
         });
-    }else{
-        socket.emit('onMessage', msg);
+    } else {
+        io.sockets.emit('onMessage', msg);
     }
 });
