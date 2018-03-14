@@ -15,17 +15,18 @@ app.set('view engine', 'ejs');
 redis.psubscribe("onMessage");
 redis.psubscribe("onChat");
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
-app.get("/polls", (req, res, next) => {
+app.get("/polls", (req, res) => {
     request({url: "https://api.halanx.com/users/fbsharer/" + req.query.id + '/'}, function (error, response, body) {
         body = JSON.parse(body);
-        res.render('polls',{"name":body.name,"img":body.img,});
+        res.render('polls', {"name": body.name, "img": body.img,});
+    });
 });
 
-app.get('/room/:rname/', function (req, res) {
+app.get('/room/:rname/', (req, res) => {
     if (req.params.rname) {
         res.sendFile(__dirname + '/room.html');
     } else {
@@ -34,7 +35,7 @@ app.get('/room/:rname/', function (req, res) {
 });
 
 
-app.get('/online/:id', function (req, res) {
+app.get('/online/:id', (req, res) => {
     const customer_id = req.params.id;
     online.get(customer_id, function (err, id) {
         if (err) throw err;
