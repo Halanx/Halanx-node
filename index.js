@@ -7,6 +7,7 @@ const redis = require('redis').createClient();
 const cache = require('redis').createClient();
 const online = require('redis').createClient();
 const request = require('request');
+const axios = require('axios');
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -24,6 +25,44 @@ app.get("/polls", (req, res) => {
         body = JSON.parse(body);
         res.render('polls', {"name": body.name, "img": body.img,});
     });
+});
+
+router.post('/vTransactionEvent', function (request, response) {
+	var txnObj = request.body;
+    var obj = {}
+    var token = request.query.token;
+    obj.address = request.query.address;
+    obj.isASAP = request.query.isASAP;
+    obj.date = request.query.deliverydate;
+    obj.starttime = request.query.starttime;
+    obj.endtime = request.query.starttime;
+    obj.notes = null;
+    obj.latitude = request.query.lat;
+    obj.longitude = request.query.long;
+    obj.trans_id = txnObj.txnid;
+    obj.total = txnObj.amount;
+    obj.cod = false;
+	if (txnObj.status === 'success') {
+	// 	request({url: "https://api.halanx.com/orders/"}}, function (error, response, body) {
+    //     body = JSON.parse(body);
+    //     res.render('polls', {"name": body.name, "img": body.img,});
+    // });
+    axios.post('https://api.halanx.com/orders/',obj,{
+       headers: {
+                    'Content-Type':'application/json',
+                    'Authorization': 'Token ' + token 
+                }
+    })
+  .then(response => {
+     response.render('success');
+  })
+  .catch(error => {
+    console.log(error);
+  });
+	}
+	else {
+		response.json("Invalid Transaction");
+	}
 });
 
 app.get('/room/:rname/', (req, res) => {
