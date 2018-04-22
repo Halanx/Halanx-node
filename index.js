@@ -42,6 +42,7 @@ app.post('/vTransactionEvent', function (request, response) {
     obj.trans_id = txnObj.txnid;
     obj.total = txnObj.amount;
     obj.cod = false;
+    obj.PaymentGateway = "payu";
 	if (txnObj.status === 'success') {
         response.render('success', {"object": obj,"token":token});
 	}
