@@ -31,17 +31,17 @@ app.post('/vTransactionEvent', function (request, response) {
 	var txnObj = request.body;
     var obj = {}
     var token = request.query.token;
-    obj.address = request.query.address;
-    obj.isASAP = request.query.isASAP;
-    obj.date = request.query.deliverydate;
-    obj.starttime = request.query.starttime;
-    obj.endtime = request.query.starttime;
-    obj.notes = null;
-    obj.latitude = request.query.lat;
-    obj.longitude = request.query.long;
-    obj.trans_id = txnObj.txnid;
-    obj.total = txnObj.amount;
-    obj.cod = false;
+    obj.DeliveryAddress = request.query.address;
+    obj.AsSoonAsPossible = request.query.isASAP;
+    obj.DeliveryDate = request.query.deliverydate;
+    obj.StartTime = request.query.starttime;
+    obj.EndTime = request.query.starttime;
+    obj.Notes = null;
+    obj.Latitude = request.query.lat;
+    obj.Longitude = request.query.long;
+    obj.TransactionID = txnObj.txnid;
+    obj.Total = txnObj.amount;
+    obj.CashOnDelivery = false;
     obj.PaymentGateway = "payu";
 	if (txnObj.status === 'success') {
         response.render('success', {"object": obj,"token":token});
