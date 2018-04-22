@@ -27,7 +27,7 @@ app.get("/polls", (req, res) => {
     });
 });
 
-router.post('/vTransactionEvent', function (request, response) {
+app.post('/vTransactionEvent', function (request, response) {
 	var txnObj = request.body;
     var obj = {}
     var token = request.query.token;
