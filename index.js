@@ -32,7 +32,7 @@ app.post('/vTransactionEvent', function (request, response) {
     var obj = {}
     var token = request.query.token;
     obj.DeliveryAddress = request.query.address;
-    obj.isASAP = request.query.isASAP;
+    obj.AsSoonAsPossible = request.query.isASAP;
     obj.DeliveryDate = request.query.deliverydate;
     obj.StartTime = request.query.starttime;
     obj.EndTime = request.query.starttime;
