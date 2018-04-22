@@ -10,8 +10,10 @@
 <script>
     var app = angular.module("app",[]);
       app.controller("control",function($scope,$q,$http){
+          var obj = '<%=object%>';
+          obj =JSON.parse(obj);
             var defer = $q.defer();
-          $http.post('https://api.halanx.com/orders/','<%=object%>',{
+          $http.post('https://api.halanx.com/orders/',obj,{
             headers: {
     'Content-Type':'application/json',
     'Authorization': 'Token ' + '<%=token%>' 
