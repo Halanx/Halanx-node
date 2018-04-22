@@ -43,22 +43,7 @@ app.post('/vTransactionEvent', function (request, response) {
     obj.total = txnObj.amount;
     obj.cod = false;
 	if (txnObj.status === 'success') {
-	// 	request({url: "https://api.halanx.com/orders/"}}, function (error, response, body) {
-    //     body = JSON.parse(body);
-    //     res.render('polls', {"name": body.name, "img": body.img,});
-    // });
-    axios.post('https://api.halanx.com/orders/',obj,{
-       headers: {
-                    'Content-Type':'application/json',
-                    'Authorization': 'Token ' + token 
-                }
-    })
-  .then(response => {
-     response.render('success');
-  })
-  .catch(error => {
-    console.log(error);
-  });
+        response.render('success', {"object": obj,"token":token});
 	}
 	else {
 		response.json("Invalid Transaction");

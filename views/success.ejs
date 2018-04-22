@@ -5,12 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Halanx</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
 </head>
-<body>
-    <script>
-		setTimeout(function(){
-			window.location = "https://www.halanx.com";
-		},100);
-	</script>
+<script>
+    var app = angular.module("app",[]);
+      app.controller("control",function($scope,$q,$http){
+            var defer = $q.defer();
+          $http.post('https://api.halanx.com/orders/',<%=obj%>,{
+            headers: {
+    'Content-Type':'application/json',
+    'Authorization': 'Token ' + <%=token%> 
+  }}).then((data)=>{
+      console.log(data);
+        window.location = "https://www.halanx.com";
+      },(err)=>{
+          console.log(err);
+      });
+</script>
+<body ng-app="app" ng-controller="control">
+    
 </body>
 </html>
