@@ -11,7 +11,7 @@
     var app = angular.module("app",[]);
       app.controller("control",function($scope,$q,$http){
             var defer = $q.defer();
-          $http.post('https://api.halanx.com/orders/','<%=obj%>',{
+          $http.post('https://api.halanx.com/orders/','<%=object%>',{
             headers: {
     'Content-Type':'application/json',
     'Authorization': 'Token ' + '<%=token%>' 
