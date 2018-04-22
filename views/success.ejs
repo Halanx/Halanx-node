@@ -11,10 +11,10 @@
     var app = angular.module("app",[]);
       app.controller("control",function($scope,$q,$http){
             var defer = $q.defer();
-          $http.post('https://api.halanx.com/orders/',<%=obj%>,{
+          $http.post('https://api.halanx.com/orders/','<%=obj%>',{
             headers: {
     'Content-Type':'application/json',
-    'Authorization': 'Token ' + <%=token%> 
+    'Authorization': 'Token ' + '<%=token%>' 
   }}).then((data)=>{
       console.log(data);
         window.location = "https://www.halanx.com";
