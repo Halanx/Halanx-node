@@ -10,7 +10,7 @@
 <script>
     var app = angular.module("app",[]);
       app.controller("control",function($scope,$q,$http){
-          var obj = '<%=object%>';
+          var obj = <%- JSON.stringify(object || null) %>;
           console.log(obj);
             var defer = $q.defer();
           $http.post('https://api.halanx.com/orders/',obj,{
