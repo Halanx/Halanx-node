@@ -12,6 +12,7 @@
       app.controller("control",function($scope,$q,$http){
           var obj = <%- JSON.stringify(object || null) %>;
           console.log(obj);
+          $scope.showSuccess = false;
             var defer = $q.defer();
           $http.post('https://api.halanx.com/orders/',obj,{
             headers: {
@@ -19,7 +20,10 @@
     'Authorization': 'Token ' + '<%=token%>' 
   }}).then((data)=>{
       console.log(data);
-        window.location = "https://www.halanx.com";
+      $scope.showSuccess = true;
+        setTimeout(function(){
+			window.location = "https://www.halanx.com";
+		},200);
       },(err)=>{
           setTimeout(function(){
 			window.location = "https://www.halanx.com";
@@ -28,6 +32,9 @@
       });
 </script>
 <body ng-app="app" ng-controller="control">
-    
+    <div style="height:  600px;width:  100%;" ng-hide="showSuccess">
+        <img src="tick.png" alt="" style="margin: 20% auto;display: block;">
+<!--        <h3>Successful!</h3>-->
+    </div>
 </body>
 </html>
