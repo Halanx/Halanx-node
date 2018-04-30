@@ -32,9 +32,9 @@
       });
 </script>
 <body ng-app="app" ng-controller="control">
-    <div style="height:  600px;width:  100%;" ng-hide="showSuccess">
-        <img src="tick.png" alt="" style="margin: 20% auto;display: block;">
-<!--        <h3>Successful!</h3>-->
-    </div>
+    <div ng-show="complete"> 
+  <img src="tick.png" style="margin: 80px auto 20px;display: block;" alt="">
+  <h2 style="text-align:center;margin-bottom:120px;">Successfully Ordered</h2>
+</div>   
 </body>
 </html>
