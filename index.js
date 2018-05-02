@@ -47,7 +47,7 @@ app.post('/vTransactionEvent', function (request, response) {
         response.render('success', {"object": obj,"token":token});
 	}
 	else {
-		response.json("Invalid Transaction");
+		response.render("cancel");
 	}
 });
 
