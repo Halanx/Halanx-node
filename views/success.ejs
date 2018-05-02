@@ -10,6 +10,7 @@
 <script>
     var app = angular.module("app",[]);
       app.controller("control",function($scope,$q,$http){
+        $scope.hide = false;
           var obj = <%- JSON.stringify(object || null) %>;
           console.log(obj);
           $scope.showSuccess = false;
@@ -20,19 +21,20 @@
     'Authorization': 'Token ' + '<%=token%>' 
   }}).then((data)=>{
       console.log(data);
-      $scope.showSuccess = true;
-    //     setTimeout(function(){
-		// 	window.location = "https://www.halanx.com";
-		// },500);
+      
+        setTimeout(function(){
+			window.location = "https://www.halanx.com/#/landing";
+		},500);
       },(err)=>{
-    //       setTimeout(function(){
-		// 	window.location = "https://www.halanx.com";
-		// },100);
+        $scope.hide = true;
+          setTimeout(function(){
+			window.location = "https://www.halanx.com";
+		},100);
       });
       });
 </script>
 <body ng-app="app" ng-controller="control">
-    <div ng-show="complete"> 
+    <div ng-hide="hide"> 
   <img src="http://pluspng.com/img-png/success-png-success-icon-image-23194-400.png" style="margin: 80px auto 20px;display: block;" alt="">
   <h2 style="text-align:center;margin-bottom:120px;">Successfully Ordered</h2>
 </div>   
