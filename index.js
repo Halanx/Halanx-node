@@ -28,10 +28,11 @@ app.get("/polls", (req, res) => {
 });
 
 app.get("/posts", (req, res) => {
-    res.render('posts');
+    request({url: "https://api.halanx.com/posts/" + req.query.id + '/share/'}, function (error, response, body) {
+	body = JSON.parse(body);
+        res.render('posts', {"id": req.query.id, "name": body.name, "image": body.image, "content": body.content});
+    });
 });
-
-
 
 app.post('/vTransactionEvent', function (request, response) {
 	var txnObj = request.body;
