@@ -27,6 +27,12 @@ app.get("/polls", (req, res) => {
     });
 });
 
+app.get("/posts", (req, res) => {
+    res.render('posts');
+});
+
+
+
 app.post('/vTransactionEvent', function (request, response) {
 	var txnObj = request.body;
     var obj = {}
