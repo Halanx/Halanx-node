@@ -9,7 +9,7 @@ const online = require('redis').createClient();
 const request = require('request');
 const axios = require('axios');
 
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 
@@ -21,21 +21,21 @@ app.get('/', (req, res) => {
 });
 
 app.get("/polls", (req, res) => {
-    request({url: "https://api.halanx.com/users/fbsharer/" + req.query.id + '/'}, function (error, response, body) {
+    request({ url: "https://api.halanx.com/users/fbsharer/" + req.query.id + '/' }, function (error, response, body) {
         body = JSON.parse(body);
-        res.render('polls', {"name": body.name, "img": body.img,});
+        res.render('polls', { "name": body.name, "img": body.img, });
     });
 });
 
 app.get("/posts", (req, res) => {
-    request({url: "https://api.halanx.com/posts/" + req.query.id + '/share/'}, function (error, response, body) {
-	body = JSON.parse(body);
-        res.render('posts', {"id": req.query.id, "name": body.name, "image": body.image, "content": body.content});
+    request({ url: "https://api.halanx.com/posts/" + req.query.id + '/share/' }, function (error, response, body) {
+        body = JSON.parse(body);
+        res.render('posts', { "id": req.query.id, "name": body.name, "image": body.image, "content": body.content });
     });
 });
 
 app.post('/vTransactionEvent', function (request, response) {
-	var txnObj = request.body;
+    var txnObj = request.body;
     var obj = {}
     var token = request.query.token;
     obj.DeliveryAddress = request.query.address;
@@ -50,12 +50,21 @@ app.post('/vTransactionEvent', function (request, response) {
     obj.Total = txnObj.amount;
     obj.CashOnDelivery = false;
     obj.PaymentGateway = "payu";
-	if (txnObj.status === 'success') {
-        response.render('success', {"object": obj,"token":token});
-	}
-	else {
-		response.render("cancel");
-	}
+    if (txnObj.status === 'success') {
+        response.render('success', { "object": obj, "token": token });
+    }
+    else {
+        response.render("cancel");
+    }
+});
+
+app.post('/vTransactionEvent/homes', function (request, response) {
+    if (request.query.status == 'done') {
+        response.redirect('https://halanxhomes.com/#/payment-status?payments=' + request.query.payments);
+    }
+    else if (request.query.status == 'no') {
+        response.redirect('https://halanxhomes.com/#/payment-status');
+    }
 });
 
 app.get('/room/:rname/', (req, res) => {
@@ -113,7 +122,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('onMessage', function (msg) {
-        socket.to(msg.room).emit('onMessage', {"text": msg.text});
+        socket.to(msg.room).emit('onMessage', { "text": msg.text });
     });
 
     socket.on('disconnect', function () {
