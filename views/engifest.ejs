@@ -1,0 +1,37 @@
+<html>
+<head>
+    <title>Engifest'19 App Downloads</title>
+</head>
+
+<style>
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 15px;
+        margin: auto;
+    }
+</style>
+
+
+<body>
+    <h1 style="text-align: center;">Engifest'19 App Downloads</h1>
+
+    <h2 style="text-align: center;">Total Downloads: <%=data.length%></h2>
+
+
+    <table>
+        <thead>
+            <th>S.No.</th>
+            <th>Name</th>
+            <th>Joining Time</th>
+        </thead>
+        <% for(var i=0; i < data.length; i++) { %>
+        <tr>
+            <td><%= i+1 %></td>
+            <td><%= data[i].name %></td>
+            <td><%= data[i].date_joined %></td>
+       </tr>
+        <% } %>
+</table>
+</body>
+</html>

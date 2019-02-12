@@ -43,9 +43,16 @@ app.get("/houses", (req, res) => {
 });
 
 
+app.get("/engi", (req, res) => {
+   request({ url: "http://127.0.0.1:8000/promotions/campaign/1/users/"}, function (error, response, body) {
+       body = JSON.parse(body);
+       res.render('engifest', {'data': body});
+   });
+});
+
 app.post('/vTransactionEvent', function (request, response) {
     var txnObj = request.body;
-    var obj = {}
+    var obj = {};
     var token = request.query.token;
     obj.DeliveryAddress = request.query.address;
     obj.AsSoonAsPossible = request.query.isASAP;
