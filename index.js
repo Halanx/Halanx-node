@@ -8,6 +8,9 @@ const cache = require('redis').createClient();
 const online = require('redis').createClient();
 const request = require('request');
 const axios = require('axios');
+const favicon = require('serve-favicon');
+
+app.use(favicon(__dirname + '/public/images/favicon.ico'));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
