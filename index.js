@@ -49,7 +49,7 @@ app.get("/houses", (req, res) => {
 app.get("/engi", (req, res) => {
    request({ url: "http://127.0.0.1:8000/promotions/campaign/1/users/"}, function (error, response, body) {
        body = JSON.parse(body);
-       res.render('engifest', {'data': body});
+       res.render('engifest', {'data': body.users, 'count': body.count});
    });
 });
 
