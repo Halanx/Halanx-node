@@ -34,6 +34,15 @@ app.get("/posts", (req, res) => {
     });
 });
 
+
+app.get("/houses", (req, res) => {
+    request({ url: "https://api.halanx.com/homes/houses/" + req.query.id + '/share/' }, function (error, response, body) {
+        body = JSON.parse(body);
+        res.render('houses', { "id": req.query.id, "title": body.title, "image": body.image, "description": body.description });
+    });
+});
+
+
 app.post('/vTransactionEvent', function (request, response) {
     var txnObj = request.body;
     var obj = {}
