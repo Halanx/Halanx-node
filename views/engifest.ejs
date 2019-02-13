@@ -14,28 +14,12 @@
 
 
 <body>
-    <h1 style="text-align: center;">Engifest'19 App Downloads</h1>
+    <h1 style="text-align: center;">Engifest'19 Statistics</h1>
 
-    <h2 style="text-align: center;">Total Downloads: <%=count%></h2>
+    <img style="display: block; margin: auto;" src="http://www.engifest.dtu.ac.in/images/main.png" height="200" width="350">
 
-
-    <table>
-        <thead>
-            <th>S.No.</th>
-            <th>Name</th>
-            <th>Joining Time</th>
-        </thead>
-        <% for(var i=0; i < data.length; i++) { %>
-        <tr>
-            <td><%= i+1 %></td>
-            <td><%= data[i].name %></td>
-            <td><%= data[i].date_joined %></td>
-       </tr>
-        <% } %>
-</table>
+    <h2 style="text-align: center;">Total Downloads: <%=users_count%></h2>
+    <h2 style="text-align: center;">Total Advance Bookings: <%=bookings_count%></h2>
 </body>
 
-<script type="text/javascript">
-    //setTimeout("location.reload(true);", 60000);
-</script>
 </html>
