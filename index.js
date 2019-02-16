@@ -47,11 +47,30 @@ app.get("/houses", (req, res) => {
 
 
 app.get("/engi", (req, res) => {
-   request({ url: "http://127.0.0.1:8000/promotions/campaigns/1/users/"}, function (error, response, body) {
+   request({ url: "https://api.halanx.com/promotions/campaigns/1/users/"}, function (error, response, body) {
        body = JSON.parse(body);
-       res.render('engifest', {'users_count': body.users_count, 'bookings_count': body.bookings_count});
+       res.render('campaign', {
+           'users_count': body.users_count,
+           'bookings_count': body.bookings_count,
+           'campaign_name': "Engifest 2019",
+           'campaign_image_url': "http://www.engifest.dtu.ac.in/images/main.png"
+       });
    });
 });
+
+
+app.get("/splash", (req, res) => {
+   request({ url: "https://api.halanx.com/promotions/campaigns/2/users/"}, function (error, response, body) {
+       body = JSON.parse(body);
+       res.render('campaign', {
+           'users_count': body.users_count,
+           'bookings_count': body.bookings_count,
+           'campaign_name': "Splash 2019",
+           'campaign_image_url': "https://d28fujbigzf56k.cloudfront.net/media/public/Info/MessageBox/14/50739427_2195321567387721_3250066009888915456_n.jpg"
+       });
+   });
+});
+
 
 app.post('/vTransactionEvent', function (request, response) {
     var txnObj = request.body;
