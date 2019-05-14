@@ -98,10 +98,19 @@ app.post('/vTransactionEvent', function (request, response) {
 
 app.post('/vTransactionEvent/homes', function (request, response) {
     if (request.query.status == 'done') {
-        response.redirect(`https://halanxhomes.com/payment-status?transaction_id=${request.query.transaction_id}&payments=${request.query.payments}`);
+        response.redirect(`https://halanxhomes.com/payment-status?transaction_id=${request.query.transaction_id}&payments=${request.query.payments}&vianotification=false`);
     }
     else if (request.query.status == 'no') {
-        response.redirect('https://halanxhomes.com/payment-status');
+        response.redirect('https://halanxhomes.com/payment-status?vianotification=false');
+    }
+});
+
+app.post('/payViaPaymentNotification/homes', function (request, response) {
+    if (request.query.status == 'done') {
+        response.redirect(`https://halanxhomes.com/payment-status/?transaction_id=${request.query.transaction_id}&vianotification=true`);
+    }
+    else if (request.query.status == 'no') {
+        response.redirect('https://halanxhomes.com/payment-status/?vianotification=true');
     }
 });
 
