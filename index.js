@@ -9,13 +9,12 @@ const online = require('redis').createClient();
 const request = require('request');
 const axios = require('axios');
 const favicon = require('serve-favicon');
+const SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX = 'SCOUTCHAT:'
+const CHAT_BETWEEN_SCOUT_AND_CUSTOMER = 'chat_between_scout_and_customer'
 
 const Sentry = require('@sentry/node');
 Sentry.init({ dsn: 'https://691a8563fc53435fb49671903d4d95d2@sentry.io/1497869' });
 
-
-const SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX = 'SCOUTCHAT:'
-const CHAT_BETWEEN_SCOUT_AND_CUSTOMER = 'chat_between_scout_and_customer'
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -162,23 +161,24 @@ http.listen(port, function () {
 io.on('connection', function (socket) {
 
     console.log(socket.id, "Connected");
+    console.error('testing sentry connection');
 
     socket.on('setCache', function (msg) {
         const id = msg.id;
-        let chat_type = msg.chat_type;
+        //let chat_type = msg.chat_type;
         cache.get(id, function (err, data) {
             if (err) throw err;
 
-            if(chat_type == CHAT_BETWEEN_SCOUT_AND_CUSTOMER)
-            {
-              cache.set(SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id, socket.id);
-              cache.set(socket.id, SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id);
-	          }
-		        else
-            {
+            // if (chat_type == CHAT_BETWEEN_SCOUT_AND_CUSTOMER)
+            // {
+            //   cache.set(SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id, socket.id);
+            //   cache.set(socket.id, SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id);
+	          // }
+		        // else
+            // {
               cache.set(id, socket.id);
               cache.set(socket.id, id);
-            }
+            // }
 
             if (data != null) {
                 console.log("New Customer Id : ", id, " New Socket-Id : ", socket.id);
