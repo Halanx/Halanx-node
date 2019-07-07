@@ -9,7 +9,7 @@ const online = require('redis').createClient();
 const request = require('request');
 const axios = require('axios');
 const favicon = require('serve-favicon');
-const SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX = 'SCOUTCHAT:';
+const SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX = 'SCOUTCHAT';
 const CHAT_BETWEEN_SCOUT_AND_CUSTOMER = 'chat_between_scout_and_customer';
 
 const Sentry = require('@sentry/node');
@@ -181,8 +181,8 @@ io.on('connection', function (socket) {
                 Sentry.captureMessage('part5');
                 cache.set(id, socket.id);
                 cache.set(socket.id, id);
-                cache.set(SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id, socket.id);
-                cache.set(socket.id, SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id);
+                // cache.set(SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id, socket.id);
+                // cache.set(socket.id, SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id);
 
             }
 
