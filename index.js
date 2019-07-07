@@ -12,9 +12,9 @@ const favicon = require('serve-favicon');
 const SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX = 'SCOUTCHAT:';
 const CHAT_BETWEEN_SCOUT_AND_CUSTOMER = 'chat_between_scout_and_customer';
 
-// const Sentry = require('@sentry/node');
-// Sentry.init({ dsn: 'https://691a8563fc53435fb49671903d4d95d2@sentry.io/1497869' });
-// Sentry.captureMessage('Something went wrong');
+const Sentry = require('@sentry/node');
+Sentry.init({ dsn: 'https://691a8563fc53435fb49671903d4d95d2@sentry.io/1497869' });
+Sentry.captureMessage('part1');
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -51,28 +51,28 @@ app.get("/houses", (req, res) => {
 
 
 app.get("/engi", (req, res) => {
-   request({ url: "https://api.halanx.com/promotions/campaigns/1/users/"}, function (error, response, body) {
-       body = JSON.parse(body);
-       res.render('campaign', {
-           'users_count': body.users_count,
-           'bookings_count': body.bookings_count,
-           'campaign_name': "Engifest 2019",
-           'campaign_image_url': "http://www.engifest.dtu.ac.in/images/main.png"
-       });
-   });
+    request({ url: "https://api.halanx.com/promotions/campaigns/1/users/"}, function (error, response, body) {
+        body = JSON.parse(body);
+        res.render('campaign', {
+            'users_count': body.users_count,
+            'bookings_count': body.bookings_count,
+            'campaign_name': "Engifest 2019",
+            'campaign_image_url': "http://www.engifest.dtu.ac.in/images/main.png"
+        });
+    });
 });
 
 
 app.get("/splash", (req, res) => {
-   request({ url: "https://api.halanx.com/promotions/campaigns/2/users/"}, function (error, response, body) {
-       body = JSON.parse(body);
-       res.render('campaign', {
-           'users_count': body.users_count,
-           'bookings_count': body.bookings_count,
-           'campaign_name': "Splash 2019",
-           'campaign_image_url': "https://d28fujbigzf56k.cloudfront.net/media/public/Info/MessageBox/14/50739427_2195321567387721_3250066009888915456_n.jpg"
-       });
-   });
+    request({ url: "https://api.halanx.com/promotions/campaigns/2/users/"}, function (error, response, body) {
+        body = JSON.parse(body);
+        res.render('campaign', {
+            'users_count': body.users_count,
+            'bookings_count': body.bookings_count,
+            'campaign_name': "Splash 2019",
+            'campaign_image_url': "https://d28fujbigzf56k.cloudfront.net/media/public/Info/MessageBox/14/50739427_2195321567387721_3250066009888915456_n.jpg"
+        });
+    });
 });
 
 
@@ -163,19 +163,23 @@ io.on('connection', function (socket) {
 
     socket.on('setCache', function (msg) {
         const id = msg.id;
+        Sentry.captureMessage('part2');
         let chat_type = msg.chat_type;
+        Sentry.captureMessage('part3');
+
         cache.get(id, function (err, data) {
             if (err) throw err;
 
             if (chat_type == CHAT_BETWEEN_SCOUT_AND_CUSTOMER)
             {
-              cache.set(SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id, socket.id);
-              cache.set(socket.id, SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id);
-	          }
-		        else
+                Sentry.captureMessage('part1');
+                cache.set(SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id, socket.id);
+                cache.set(socket.id, SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id);
+            }
+            else
             {
-              cache.set(id, socket.id);
-              cache.set(socket.id, id);
+                cache.set(id, socket.id);
+                cache.set(socket.id, id);
             }
 
             if (data != null) {
