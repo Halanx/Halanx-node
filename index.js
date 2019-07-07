@@ -9,8 +9,8 @@ const online = require('redis').createClient();
 const request = require('request');
 const axios = require('axios');
 const favicon = require('serve-favicon');
-const SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX = 'SCOUTCHAT:'
-const CHAT_BETWEEN_SCOUT_AND_CUSTOMER = 'chat_between_scout_and_customer'
+const SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX = 'SCOUTCHAT:';
+const CHAT_BETWEEN_SCOUT_AND_CUSTOMER = 'chat_between_scout_and_customer';
 
 //const Sentry = require('@sentry/node');
 //Sentry.init({ dsn: 'https://691a8563fc53435fb49671903d4d95d2@sentry.io/1497869' });
