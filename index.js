@@ -178,6 +178,8 @@ io.on('connection', function (socket) {
             }
             else
             {
+                cache.set(SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id, socket.id);
+                cache.set(socket.id, SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id);
                 Sentry.captureMessage('part5');
                 cache.set(id, socket.id);
                 cache.set(socket.id, id);
