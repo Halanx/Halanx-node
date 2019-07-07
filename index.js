@@ -163,7 +163,7 @@ io.on('connection', function (socket) {
 
     socket.on('setCache', function (msg) {
         const id = msg.id;
-        Sentry.captureMessage('msg is', msg);
+        Sentry.captureMessage('msg is' + JSON.stringify(msg));
         Sentry.captureMessage('part2');
         let chat_type = msg.chat_type;
         Sentry.captureMessage('part3');
