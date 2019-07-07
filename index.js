@@ -12,11 +12,10 @@ const favicon = require('serve-favicon');
 const SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX = 'SCOUTCHAT:';
 const CHAT_BETWEEN_SCOUT_AND_CUSTOMER = 'chat_between_scout_and_customer';
 
-//const Sentry = require('@sentry/node');
-//Sentry.init({ dsn: 'https://691a8563fc53435fb49671903d4d95d2@sentry.io/1497869' });
-
+// const Sentry = require('@sentry/node');
+// Sentry.init({ dsn: 'https://691a8563fc53435fb49671903d4d95d2@sentry.io/1497869' });
+// Sentry.captureMessage('Something went wrong');
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.set('view engine', 'ejs');
