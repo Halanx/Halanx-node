@@ -172,12 +172,13 @@ io.on('connection', function (socket) {
 
             if (chat_type == CHAT_BETWEEN_SCOUT_AND_CUSTOMER)
             {
-                Sentry.captureMessage('part1');
+                Sentry.captureMessage('part4');
                 cache.set(SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id, socket.id);
                 cache.set(socket.id, SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id);
             }
             else
             {
+                Sentry.captureMessage('part5');
                 cache.set(id, socket.id);
                 cache.set(socket.id, id);
             }
