@@ -9,7 +9,7 @@ const online = require('redis').createClient();
 const request = require('request');
 const axios = require('axios');
 const favicon = require('serve-favicon');
-const SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX = 'SCOUTCHAT';
+const SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX = 'SCOUTCHAT:';
 const CHAT_BETWEEN_SCOUT_AND_CUSTOMER = 'chat_between_scout_and_customer';
 
 const Sentry = require('@sentry/node');
