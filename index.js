@@ -167,32 +167,35 @@ io.on('connection', function (socket) {
         Sentry.captureMessage('part2');
         let chat_type = msg.chat_type;
         Sentry.captureMessage('part3');
+        if (id)
+        {
+            cache.get(id, function (err, data) {
+                if (err) throw err;
 
-        cache.get(id, function (err, data) {
-            if (err) throw err;
+                if (chat_type == CHAT_BETWEEN_SCOUT_AND_CUSTOMER)
+                {
+                    Sentry.captureMessage('part4');
+                    cache.set(SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id, socket.id);
+                    cache.set(socket.id, SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id);
+                }
+                else
+                {
+                    Sentry.captureMessage('part5');
+                    cache.set(id, socket.id);
+                    cache.set(socket.id, id);
+                    // cache.set(SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id, socket.id);
+                    // cache.set(socket.id, SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id);
 
-            if (chat_type == CHAT_BETWEEN_SCOUT_AND_CUSTOMER)
-            {
-                Sentry.captureMessage('part4');
-                cache.set(SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id, socket.id);
-                cache.set(socket.id, SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id);
-            }
-            else
-            {
-                Sentry.captureMessage('part5');
-                cache.set(id, socket.id);
-                cache.set(socket.id, id);
-                // cache.set(SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id, socket.id);
-                // cache.set(socket.id, SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id);
+                }
 
-            }
+                if (data != null) {
+                    console.log("New Customer Id : ", id, " New Socket-Id : ", socket.id);
+                } else {
+                    console.log("Customer Id : ", id, " Socket-Id : ", socket.id);
+                }
+            });
+        }
 
-            if (data != null) {
-                console.log("New Customer Id : ", id, " New Socket-Id : ", socket.id);
-            } else {
-                console.log("Customer Id : ", id, " Socket-Id : ", socket.id);
-            }
-        });
     });
 
     socket.on('join', function (msg) {
