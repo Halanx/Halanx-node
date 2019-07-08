@@ -162,17 +162,21 @@ io.on('connection', function (socket) {
     console.log(socket.id, "Connected");
 
     socket.on('setCache', function (msg) {
-        const id = msg.id;
+        const id = msg.id; //this id is customer_id in case of normal chat. scout id in case of scout and
+        // customer in case of customer
+
         Sentry.captureMessage('msg is' + JSON.stringify(msg));
         Sentry.captureMessage('part2');
+
         let chat_type = msg.chat_type;
+
         Sentry.captureMessage('part3');
         if (id)
         {
             cache.get(id, function (err, data) {
                 if (err) throw err;
 
-                if (chat_type == CHAT_BETWEEN_SCOUT_AND_CUSTOMER)
+                if (chat_type === CHAT_BETWEEN_SCOUT_AND_CUSTOMER)
                 {
                     Sentry.captureMessage('part4');
                     cache.set(SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id, socket.id);
@@ -187,10 +191,12 @@ io.on('connection', function (socket) {
                     // cache.set(socket.id, SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id);
 
                 }
-
-                if (data != null) {
+                if (data != null)
+                {
                     console.log("New Customer Id : ", id, " New Socket-Id : ", socket.id);
-                } else {
+                }
+                else
+                {
                     console.log("Customer Id : ", id, " Socket-Id : ", socket.id);
                 }
             });
