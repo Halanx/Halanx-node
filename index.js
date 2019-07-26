@@ -9,14 +9,13 @@ const online = require('redis').createClient();
 const request = require('request');
 const axios = require('axios');
 const favicon = require('serve-favicon');
-//const SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX = 'SCOUTCHAT:'
-//const CHAT_BETWEEN_SCOUT_AND_CUSTOMER = 'chat_between_scout_and_customer'
+const SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX = 'SCOUTCHAT:';
+const CHAT_BETWEEN_SCOUT_AND_CUSTOMER = 'chat_between_scout_and_customer';
 
-//const Sentry = require('@sentry/node');
-//Sentry.init({ dsn: 'https://691a8563fc53435fb49671903d4d95d2@sentry.io/1497869' });
-
+const Sentry = require('@sentry/node');
+Sentry.init({ dsn: 'https://c7bb896cc349467ba45e3db9970c809e@sentry.io/1514114' });
+Sentry.captureMessage('part1');
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.set('view engine', 'ejs');
@@ -52,28 +51,28 @@ app.get("/houses", (req, res) => {
 
 
 app.get("/engi", (req, res) => {
-   request({ url: "https://api.halanx.com/promotions/campaigns/1/users/"}, function (error, response, body) {
-       body = JSON.parse(body);
-       res.render('campaign', {
-           'users_count': body.users_count,
-           'bookings_count': body.bookings_count,
-           'campaign_name': "Engifest 2019",
-           'campaign_image_url': "http://www.engifest.dtu.ac.in/images/main.png"
-       });
-   });
+    request({ url: "https://api.halanx.com/promotions/campaigns/1/users/"}, function (error, response, body) {
+        body = JSON.parse(body);
+        res.render('campaign', {
+            'users_count': body.users_count,
+            'bookings_count': body.bookings_count,
+            'campaign_name': "Engifest 2019",
+            'campaign_image_url': "http://www.engifest.dtu.ac.in/images/main.png"
+        });
+    });
 });
 
 
 app.get("/splash", (req, res) => {
-   request({ url: "https://api.halanx.com/promotions/campaigns/2/users/"}, function (error, response, body) {
-       body = JSON.parse(body);
-       res.render('campaign', {
-           'users_count': body.users_count,
-           'bookings_count': body.bookings_count,
-           'campaign_name': "Splash 2019",
-           'campaign_image_url': "https://d28fujbigzf56k.cloudfront.net/media/public/Info/MessageBox/14/50739427_2195321567387721_3250066009888915456_n.jpg"
-       });
-   });
+    request({ url: "https://api.halanx.com/promotions/campaigns/2/users/"}, function (error, response, body) {
+        body = JSON.parse(body);
+        res.render('campaign', {
+            'users_count': body.users_count,
+            'bookings_count': body.bookings_count,
+            'campaign_name': "Splash 2019",
+            'campaign_image_url': "https://d28fujbigzf56k.cloudfront.net/media/public/Info/MessageBox/14/50739427_2195321567387721_3250066009888915456_n.jpg"
+        });
+    });
 });
 
 
@@ -161,31 +160,54 @@ http.listen(port, function () {
 io.on('connection', function (socket) {
 
     console.log(socket.id, "Connected");
-    console.error('testing sentry connection');
 
     socket.on('setCache', function (msg) {
-        const id = msg.id;
+        const id = msg.id; //this id is customer_id in case of normal chat. scout id in case of scout and
+        // customer in case of customer
+
+        Sentry.captureMessage('msg is' + JSON.stringify(msg));
+        Sentry.captureMessage('part2');
+
         let chat_type = msg.chat_type;
-        cache.get(id, function (err, data) {
-            if (err) throw err;
 
-            if (chat_type == CHAT_BETWEEN_SCOUT_AND_CUSTOMER)
-            {
-              cache.set(SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id, socket.id);
-              cache.set(socket.id, SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id);
-	          }
-		        else
-            {
-              cache.set(id, socket.id);
-              cache.set(socket.id, id);
-            }
+        Sentry.captureMessage('part3');
+        if (id)
+        {
+            cache.get(id, function (err, data) {
+                if (err) throw err;
 
-            if (data != null) {
-                console.log("New Customer Id : ", id, " New Socket-Id : ", socket.id);
-            } else {
-                console.log("Customer Id : ", id, " Socket-Id : ", socket.id);
-            }
-        });
+                if (chat_type === CHAT_BETWEEN_SCOUT_AND_CUSTOMER)
+                {
+                    Sentry.captureMessage('customer or scout connected');
+                    cache.set(SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id, socket.id);
+                    cache.set(socket.id, SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id);
+                    Sentry.captureMessage("id is " + id);
+                    Sentry.captureMessage("socket id is " + socket.id);
+                    cache.get(socket.id, function(err, reply){
+                      Sentry.captureMessage("id with prefix is " + reply);
+                    });
+
+                }
+                else
+                {
+                    Sentry.captureMessage('customer connected from consumer app');
+                    cache.set(id, socket.id);
+                    cache.set(socket.id, id);
+                    // cache.set(SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id, socket.id);
+                    // cache.set(socket.id, SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id);
+
+                }
+                if (data != null)
+                {
+                    console.log("New Customer Id : ", id, " New Socket-Id : ", socket.id);
+                }
+                else
+                {
+                    console.log("Customer Id : ", id, " Socket-Id : ", socket.id);
+                }
+            });
+        }
+
     });
 
     socket.on('join', function (msg) {
@@ -228,7 +250,7 @@ redis.on("pmessage", function (pattern, channel, msg) {
     if (channel === 'onChat') {
         cache.get(msg.receiver, function (err, id) {
             if (err) throw err;
-
+            Sentry.captureMessage("sending message to " + id);
             if (id != null) {
                 io.sockets.to(id).emit("onChat", msg);
             }
