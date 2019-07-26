@@ -178,13 +178,17 @@ io.on('connection', function (socket) {
 
                 if (chat_type === CHAT_BETWEEN_SCOUT_AND_CUSTOMER)
                 {
-                    Sentry.captureMessage('part4');
+                    Sentry.captureMessage('customer or scout connected');
                     cache.set(SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id, socket.id);
                     cache.set(socket.id, SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id);
+                    Sentry.captureMessage("id is " + id);
+                    Sentry.captureMessage("socket id is " + socket.id);
+                    Sentry.captureMessage("id with prefix is " + cache.get(socket.id));
+
                 }
                 else
                 {
-                    Sentry.captureMessage('part5');
+                    Sentry.captureMessage('customer connected from consumer app');
                     cache.set(id, socket.id);
                     cache.set(socket.id, id);
                     // cache.set(SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id, socket.id);
