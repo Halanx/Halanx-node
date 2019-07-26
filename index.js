@@ -184,7 +184,7 @@ io.on('connection', function (socket) {
                     Sentry.captureMessage("id is " + id);
                     Sentry.captureMessage("socket id is " + socket.id);
                     cache.get(socket.id, function(err, reply){
-                      Sentry.captureMessage("id with prefix is " + reply);  
+                      Sentry.captureMessage("id with prefix is " + reply);
                     });
 
                 }
@@ -250,7 +250,7 @@ redis.on("pmessage", function (pattern, channel, msg) {
     if (channel === 'onChat') {
         cache.get(msg.receiver, function (err, id) {
             if (err) throw err;
-
+            Sentry.captureMessage("sending message to " + id);
             if (id != null) {
                 io.sockets.to(id).emit("onChat", msg);
             }
