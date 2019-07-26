@@ -183,7 +183,9 @@ io.on('connection', function (socket) {
                     cache.set(socket.id, SCOUT_CUSTOMER_SOCKET_CHAT_CONVERSATION_PREFIX+id);
                     Sentry.captureMessage("id is " + id);
                     Sentry.captureMessage("socket id is " + socket.id);
-                    Sentry.captureMessage("id with prefix is " + cache.get(socket.id));
+                    cache.get(socket.id, function(err, reply){
+                      Sentry.captureMessage("id with prefix is " + reply);  
+                    });
 
                 }
                 else
